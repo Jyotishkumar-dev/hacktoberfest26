@@ -254,9 +254,9 @@ export default function DashboardPage() {
         )}
 
         {/* ============================================================== */}
-        {/* Hero KPI Strip: 4 Large Cards */}
+        {/* Hero KPI Strip: 4 Large Cards (2-up on mobile) */}
         {/* ============================================================== */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {/* 1. Total Demand */}
           <Card className="bg-card/70 backdrop-blur-md border-border/80 shadow-sm relative overflow-hidden">
             <div className="absolute right-3 top-3 rounded-full bg-blue-500/10 p-2.5 text-blue-500">
@@ -266,34 +266,34 @@ export default function DashboardPage() {
               <CardDescription className="text-xs font-medium uppercase tracking-wider">
                 Total Demand
               </CardDescription>
-              <CardTitle className="text-3xl font-bold font-mono tracking-tight text-foreground">
+              <CardTitle className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-foreground">
                 {(currentActiveLoadW / 1000).toFixed(2)}{" "}
-                <span className="text-base font-normal text-muted-foreground">kW</span>
+                <span className="text-sm sm:text-base font-normal text-muted-foreground">kW</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <p className="text-xs text-muted-foreground">
-                {facilityItems.filter((i) => i.is_active !== false).length} of {facilityItems.length} equipment items active
+              <p className="text-[11px] sm:text-xs text-muted-foreground">
+                {facilityItems.filter((i) => i.is_active !== false).length} of {facilityItems.length} items active
               </p>
             </CardContent>
           </Card>
 
           {/* 2. Usable Backup */}
           <Card className="bg-card/70 backdrop-blur-md border-border/80 shadow-sm relative overflow-hidden">
-            <div className="absolute right-3 top-3 rounded-full bg-emerald-500/10 p-2.5 text-emerald-500">
-              <Battery className="h-5 w-5" />
+            <div className="absolute right-3 top-3 rounded-full bg-emerald-500/10 p-2 sm:p-2.5 text-emerald-500">
+              <Battery className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <CardHeader className="pb-2">
               <CardDescription className="text-xs font-medium uppercase tracking-wider">
                 Usable Backup
               </CardDescription>
-              <CardTitle className="text-3xl font-bold font-mono tracking-tight text-foreground">
+              <CardTitle className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-foreground">
                 {liveEstimate.usableKwh.toFixed(1)}{" "}
-                <span className="text-base font-normal text-muted-foreground">kWh</span>
+                <span className="text-sm sm:text-base font-normal text-muted-foreground">kWh</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[11px] sm:text-xs text-muted-foreground">
                 {customCapacity} kWh × {customDod}% DoD × {customEff}% Eff
               </p>
             </CardContent>
@@ -301,14 +301,14 @@ export default function DashboardPage() {
 
           {/* 3. Battery Level */}
           <Card className="bg-card/70 backdrop-blur-md border-border/80 shadow-sm relative overflow-hidden">
-            <div className={`absolute right-3 top-3 rounded-full bg-muted p-2.5 ${batteryColorClass}`}>
-              <Battery className="h-5 w-5" />
+            <div className={`absolute right-3 top-3 rounded-full bg-muted p-2 sm:p-2.5 ${batteryColorClass}`}>
+              <Battery className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <CardHeader className="pb-2">
               <CardDescription className="text-xs font-medium uppercase tracking-wider">
                 Battery Level
               </CardDescription>
-              <CardTitle className={`text-3xl font-bold font-mono tracking-tight ${batteryColorClass}`}>
+              <CardTitle className={`text-2xl sm:text-3xl font-bold font-mono tracking-tight ${batteryColorClass}`}>
                 {simulatedBatteryPct}%
               </CardTitle>
             </CardHeader>
@@ -319,7 +319,7 @@ export default function DashboardPage() {
                   style={{ width: `${simulatedBatteryPct}%` }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[11px] sm:text-xs text-muted-foreground">
                 Optimal state of charge (SoC)
               </p>
             </CardContent>
@@ -334,20 +334,20 @@ export default function DashboardPage() {
             }`}
           >
             <div
-              className={`absolute right-3 top-3 rounded-full p-2.5 ${
+              className={`absolute right-3 top-3 rounded-full p-2 sm:p-2.5 ${
                 isRuntimeCritical
                   ? "bg-[#F97316]/15 text-[#F97316]"
                   : "bg-primary/10 text-primary"
               }`}
             >
-              <Clock className="h-5 w-5" />
+              <Clock className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <CardHeader className="pb-2">
               <CardDescription className="text-xs font-medium uppercase tracking-wider">
                 Estimated Runtime
               </CardDescription>
               <CardTitle
-                className={`text-3xl font-bold font-mono tracking-tight ${
+                className={`text-2xl sm:text-3xl font-bold font-mono tracking-tight ${
                   isRuntimeCritical ? "text-[#F97316]" : "text-foreground"
                 }`}
               >

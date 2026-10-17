@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Server, Activity, Sparkles, GitCompare, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { GuidedTour } from "@/components/onboarding/GuidedTour";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -45,6 +46,9 @@ export function AppShell({ children }: AppShellProps) {
           {children}
         </main>
       </div>
+
+      {/* 3-Step Guided Tour for first-time login / onboarding */}
+      <GuidedTour />
 
       {/* Mobile / Tablet Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 flex h-16 border-t bg-background/95 backdrop-blur md:hidden items-center justify-around px-2">

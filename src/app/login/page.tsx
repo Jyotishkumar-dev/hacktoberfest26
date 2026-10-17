@@ -97,7 +97,7 @@ export default function LoginPage() {
       loadSeedData("demo-judge");
 
       toast.success("Entering City Hospital Wing demo!", {
-        description: "Pre-configured with 50 kWh battery & 9 medical equipment items.",
+        description: "Pre-configured with 50 kWh battery, 9 medical circuits, and 3 comparison strategies ready.",
       });
 
       router.push("/dashboard");

@@ -20,7 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Building2, User, LogOut, Database, RefreshCw } from "lucide-react";
+import { Building2, User, LogOut, Database, RefreshCw, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import { loadSampleDataAction } from "@/app/actions/seed";
 import { createClient } from "@/lib/supabase/client";
@@ -145,6 +145,19 @@ export function TopBar() {
           <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-slate-400 animate-pulse" />
           SIMULATED DATA
         </Badge>
+
+        {/* Guided Tour Trigger */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => useFacilityStore.getState().setOnboardingDismissed(false)}
+          className="hidden md:inline-flex text-xs font-medium gap-1.5 hover:bg-primary/5"
+          title="Open Guided Tour (3 Steps)"
+          aria-label="Open Guided Tour"
+        >
+          <HelpCircle className="h-3.5 w-3.5 text-primary" />
+          <span>Guided Tour</span>
+        </Button>
 
         {/* Quick Seed Button */}
         <Button
