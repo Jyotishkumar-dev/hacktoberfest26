@@ -1,17 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { useFacilityStore } from "@/store/useFacilityStore";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Settings, Database, RefreshCw, Key } from "lucide-react";
+import { Database, RefreshCw, Key } from "lucide-react";
 
 export default function SettingsPage() {
-  const { facilities, loadSeedData, resetAll } = useFacilityStore();
+  const { loadSeedData, resetAll } = useFacilityStore();
 
   return (
     <AppShell>

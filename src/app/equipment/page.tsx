@@ -16,14 +16,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,7 +57,6 @@ import {
   Plus,
   Lock,
   MoreVertical,
-  Upload,
   Download,
   Trash2,
   Edit,
@@ -149,7 +141,6 @@ function EquipmentCard({
       } ${!item.is_active ? "opacity-60 bg-muted/40" : ""}`}
     >
       <div className="flex items-start justify-between gap-2">
-        {/* Drag handle area */}
         <div {...listeners} {...attributes} className="flex-1 cursor-grab active:cursor-grabbing">
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-muted inline-flex items-center justify-center">
@@ -173,7 +164,6 @@ function EquipmentCard({
           </div>
         </div>
 
-        {/* Action Menu */}
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
@@ -237,7 +227,6 @@ function EquipmentCard({
         </div>
       </div>
 
-      {/* Card Body */}
       <div className="mt-3 flex items-center justify-between text-xs border-t pt-2.5">
         <div className="flex items-center gap-1.5 font-mono font-bold text-sm text-foreground">
           <span>{item.power_w.toLocaleString()} W</span>
@@ -280,7 +269,6 @@ interface ColumnProps {
   priority: Priority;
   title: string;
   subtitle: string;
-  colorClass: string;
   badgeVariant: "p1" | "p2" | "p3";
   items: Equipment[];
   onEdit: (item: Equipment) => void;
@@ -293,7 +281,6 @@ function DroppableColumn({
   priority,
   title,
   subtitle,
-  colorClass,
   badgeVariant,
   items,
   onEdit,
@@ -305,7 +292,6 @@ function DroppableColumn({
     id: priority,
   });
 
-  const columnTotalWatts = items.reduce((sum, item) => sum + (item.power_w || 0), 0);
   const activeWatts = items
     .filter((i) => i.is_active !== false)
     .reduce((sum, item) => sum + (item.power_w || 0), 0);
@@ -317,7 +303,6 @@ function DroppableColumn({
         isOver ? "bg-accent/40 ring-2 ring-primary/40" : ""
       }`}
     >
-      {/* Column Header */}
       <div className="flex items-center justify-between pb-3 border-b mb-3">
         <div className="flex items-center gap-2">
           <Badge variant={badgeVariant} className="text-xs px-2.5 py-0.5 uppercase font-bold">
@@ -336,7 +321,6 @@ function DroppableColumn({
         </div>
       </div>
 
-      {/* Column Cards */}
       <div className="flex-1 space-y-3 overflow-y-auto pr-1">
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 border-2 border-dashed rounded-xl p-4 text-center text-muted-foreground">
@@ -365,12 +349,10 @@ function DroppableColumn({
 // -------------------------------------------------------------
 export default function EquipmentManagerPage() {
   const {
-    facilities,
     selectedFacilityId,
     equipment,
     isLoading,
     getSelectedFacility,
-    getFacilityEquipment,
     updateEquipmentPriority,
     addEquipmentItem,
     updateEquipmentItem,
@@ -384,16 +366,12 @@ export default function EquipmentManagerPage() {
     return equipment.filter((e) => !selectedFacilityId || e.facility_id === selectedFacilityId);
   }, [equipment, selectedFacilityId]);
 
-  // Drag and drop state
   const [activeDragItem, setActiveDragItem] = useState<Equipment | null>(null);
-
-  // Dialog States
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isCsvOpen, setIsCsvOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [editingItem, setEditingItem] = useState<Equipment | null>(null);
 
-  // Form State
   const [formName, setFormName] = useState("");
   const [formCategory, setFormCategory] = useState<Category>("IT");
   const [formPower, setFormPower] = useState<string>("500");
@@ -401,7 +379,6 @@ export default function EquipmentManagerPage() {
   const [formAlwaysOn, setFormAlwaysOn] = useState(false);
   const [formNotes, setFormNotes] = useState("");
 
-  // CSV Import State
   interface CsvRow {
     name: string;
     power_w: number;
@@ -413,7 +390,6 @@ export default function EquipmentManagerPage() {
   const [csvPreview, setCsvPreview] = useState<CsvRow[]>([]);
   const [csvFileName, setCsvFileName] = useState<string | null>(null);
 
-  // DnD Sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -422,14 +398,12 @@ export default function EquipmentManagerPage() {
     })
   );
 
-  // Column grouped items
   const p1Items = facilityItems.filter((i) => i.priority === "P1");
   const p2Items = facilityItems.filter((i) => i.priority === "P2");
   const p3Items = facilityItems.filter((i) => i.priority === "P3");
 
   const totalLoadWatts = facilityItems.reduce((acc, curr) => acc + (curr.power_w || 0), 0);
 
-  // Drag Handlers
   const handleDragStart = (event: DragStartEvent) => {
     const item = facilityItems.find((i) => i.id === event.active.id);
     if (item) setActiveDragItem(item);
@@ -458,7 +432,6 @@ export default function EquipmentManagerPage() {
     }
   };
 
-  // Manual priority change handler (accessibility fallback)
   const handlePriorityChange = (id: string, priority: Priority) => {
     const res = useFacilityStore.getState().updateEquipmentPriority(id, priority);
     if (!res.success) {
@@ -470,7 +443,6 @@ export default function EquipmentManagerPage() {
     }
   };
 
-  // Add / Edit Modal Openers
   const openAddDialog = () => {
     setEditingItem(null);
     setFormName("");
@@ -493,7 +465,6 @@ export default function EquipmentManagerPage() {
     setIsAddOpen(true);
   };
 
-  // Save Equipment Form
   const handleSaveEquipment = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -545,7 +516,6 @@ export default function EquipmentManagerPage() {
     setIsAddOpen(false);
   };
 
-  // Confirm Delete
   const handleConfirmDelete = () => {
     if (deleteConfirmId) {
       deleteEquipmentItem(deleteConfirmId);
@@ -554,7 +524,6 @@ export default function EquipmentManagerPage() {
     }
   };
 
-  // Export JSON
   const handleExportJson = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(facilityItems, null, 2));
     const downloadAnchor = document.createElement("a");
@@ -566,7 +535,6 @@ export default function EquipmentManagerPage() {
     toast.success("Exported equipment list to JSON");
   };
 
-  // Download CSV Template
   const handleDownloadTemplate = () => {
     const csvContent = "data:text/csv;charset=utf-8,name,power_w,priority,category\nEmergency Ventilator,1200,P1,Medical\nServer Rack PSU,2400,P1,IT\nCooling Chiller,4500,P3,HVAC\n";
     const downloadAnchor = document.createElement("a");
@@ -577,7 +545,6 @@ export default function EquipmentManagerPage() {
     downloadAnchor.remove();
   };
 
-  // CSV File Handler
   const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -633,7 +600,6 @@ export default function EquipmentManagerPage() {
     });
   };
 
-  // Commit CSV Import
   const handleConfirmCsvImport = () => {
     const validRows = csvPreview.filter((r) => r.isValid);
     if (validRows.length === 0) {
@@ -663,9 +629,6 @@ export default function EquipmentManagerPage() {
   return (
     <AppShell>
       <div className="space-y-6">
-        {/* ============================================================== */}
-        {/* 1. Header with Facility Info & Tier Summaries */}
-        {/* ============================================================== */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b pb-6">
           <div>
             <div className="flex items-center gap-2.5">
@@ -681,7 +644,6 @@ export default function EquipmentManagerPage() {
             </p>
           </div>
 
-          {/* Quick Metrics & Actions Bar */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Button
               variant="outline"
@@ -726,9 +688,6 @@ export default function EquipmentManagerPage() {
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* KPI Strip: Total count, total load, P1/P2/P3 badges */}
-        {/* ============================================================== */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
           <Card className="p-4 bg-card/60 backdrop-blur-sm">
             <p className="text-xs font-medium text-muted-foreground">Total Equipment</p>
@@ -773,9 +732,6 @@ export default function EquipmentManagerPage() {
           </Card>
         </div>
 
-        {/* ============================================================== */}
-        {/* Loading Skeleton */}
-        {/* ============================================================== */}
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Skeleton className="h-[400px] rounded-2xl" />
@@ -784,9 +740,6 @@ export default function EquipmentManagerPage() {
           </div>
         )}
 
-        {/* ============================================================== */}
-        {/* Empty State */}
-        {/* ============================================================== */}
         {!isLoading && facilityItems.length === 0 && (
           <Card className="p-12 text-center border-dashed">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-muted text-muted-foreground mb-4">
@@ -809,9 +762,6 @@ export default function EquipmentManagerPage() {
           </Card>
         )}
 
-        {/* ============================================================== */}
-        {/* 2. Drag-and-Drop 3-Column Board */}
-        {/* ============================================================== */}
         {!isLoading && facilityItems.length > 0 && (
           <DndContext
             sensors={sensors}
@@ -823,7 +773,6 @@ export default function EquipmentManagerPage() {
                 priority="P1"
                 title="Critical"
                 subtitle="Life safety, servers, core comms"
-                colorClass="text-[#EF4444]"
                 badgeVariant="p1"
                 items={p1Items}
                 onEdit={openEditDialog}
@@ -836,7 +785,6 @@ export default function EquipmentManagerPage() {
                 priority="P2"
                 title="Important"
                 subtitle="Operational HVAC, cold storage"
-                colorClass="text-[#F59E0B]"
                 badgeVariant="p2"
                 items={p2Items}
                 onEdit={openEditDialog}
@@ -849,7 +797,6 @@ export default function EquipmentManagerPage() {
                 priority="P3"
                 title="Non-essential"
                 subtitle="First tier to shed during outage"
-                colorClass="text-[#22C55E]"
                 badgeVariant="p3"
                 items={p3Items}
                 onEdit={openEditDialog}
@@ -859,7 +806,6 @@ export default function EquipmentManagerPage() {
               />
             </div>
 
-            {/* Drag Overlay Ghost */}
             <DragOverlay>
               {activeDragItem ? (
                 <div className="w-80 rounded-xl border bg-card p-4 shadow-2xl opacity-90 rotate-2">
@@ -876,9 +822,7 @@ export default function EquipmentManagerPage() {
           </DndContext>
         )}
 
-        {/* ============================================================== */}
-        {/* 3. Add / Edit Equipment Dialog */}
-        {/* ============================================================== */}
+        {/* Add/Edit Dialog */}
         <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -998,9 +942,7 @@ export default function EquipmentManagerPage() {
           </DialogContent>
         </Dialog>
 
-        {/* ============================================================== */}
-        {/* 4. Delete Confirmation Dialog */}
-        {/* ============================================================== */}
+        {/* Delete Confirmation */}
         <Dialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -1023,9 +965,7 @@ export default function EquipmentManagerPage() {
           </DialogContent>
         </Dialog>
 
-        {/* ============================================================== */}
-        {/* 5. CSV Import & Validation Dialog */}
-        {/* ============================================================== */}
+        {/* CSV Import */}
         <Dialog open={isCsvOpen} onOpenChange={setIsCsvOpen}>
           <DialogContent className="sm:max-w-2xl max-h-[80vh] flex flex-col">
             <DialogHeader>

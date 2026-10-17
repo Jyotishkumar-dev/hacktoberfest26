@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useFacilityStore } from "@/store/useFacilityStore";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Building2, Sparkles, User, LogOut, Database, RefreshCw } from "lucide-react";
+import { Building2, User, LogOut, Database, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { loadSampleDataAction } from "@/app/actions/seed";
 import { createClient } from "@/lib/supabase/client";

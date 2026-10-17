@@ -13,17 +13,18 @@ export async function loadSampleDataAction() {
     const userId = user?.id || "demo-user";
     const sample = generateSampleData(userId);
 
-    const isMock = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock.supabase.co");
+    const isMock =
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      process.env.NEXT_PUBLIC_SUPABASE_URL.includes("mock.supabase.co");
 
     if (!isMock && user) {
       // 1. Clean previous sample facilities for user if any
       await supabase.from("facility_profiles").delete().eq("user_id", user.id);
 
       // 2. Insert the 4 facility profiles
-      const { data: insertedFacilities, error: facError } = await supabase
+      const { error: facError } = await supabase
         .from("facility_profiles")
-        .insert(sample.facilities)
-        .select();
+        .insert(sample.facilities);
 
       if (facError) {
         console.error("Error inserting facilities:", facError);
@@ -55,7 +56,8 @@ export async function loadSampleDataAction() {
       data: sample,
     };
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to load sample data";
+    const errorMsg = err instanceof Error ? err.message : "Failed to load sample data";
+    console.warn("Falling back to local demo sample generation:", errorMsg);
     const sample = generateSampleData("demo-user");
     return {
       success: true,

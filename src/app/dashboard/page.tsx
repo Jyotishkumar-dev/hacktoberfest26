@@ -3,20 +3,18 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { useFacilityStore } from "@/store/useFacilityStore";
-import { Equipment, Priority, Category } from "@/types";
+import { Priority, Category } from "@/types";
 import { estimateRuntime, sensitivityTable, runSimulation, calculateActiveLoad } from "@/lib/engine";
-import { formatPower, formatHours, cn } from "@/lib/utils";
+import { formatPower, formatHours } from "@/lib/utils";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -36,9 +34,7 @@ import {
   Flame,
   ArrowRight,
   RefreshCw,
-  Power,
   SlidersHorizontal,
-  ChevronDown,
   Layers,
   HeartPulse,
   Server,
@@ -80,7 +76,6 @@ function getCategoryIcon(cat: Category) {
 
 export default function DashboardPage() {
   const {
-    facilities,
     selectedFacilityId,
     equipment,
     getSelectedFacility,
@@ -110,7 +105,7 @@ export default function DashboardPage() {
       setCustomDod(facility.dod_limit_pct);
       setCustomEff(facility.efficiency_pct);
     }
-  }, [facility?.id, facility?.backup_kwh, facility?.dod_limit_pct, facility?.efficiency_pct]);
+  }, [facility]);
 
   // Auto-refresh simulated state every 30 seconds
   useEffect(() => {
@@ -172,7 +167,6 @@ export default function DashboardPage() {
 
   // Battery gauge color token logic:
   // Battery <30%: orange #F97316, <10%: red #DC2626
-  // Default simulated battery level starts at 100% of usable capacity
   const simulatedBatteryPct = 100;
   const batteryColorClass =
     simulatedBatteryPct < 10
@@ -592,7 +586,6 @@ export default function DashboardPage() {
                           formatter={(val: number) => [`${val}%`, "Battery Remaining"]}
                           labelFormatter={(label) => `Elapsed: ${label}`}
                         />
-                        {/* 30% warning threshold reference line */}
                         <ReferenceLine
                           y={30}
                           stroke="#F97316"
@@ -611,7 +604,6 @@ export default function DashboardPage() {
                     </ResponsiveContainer>
                   </div>
 
-                  {/* Dropout & Metrics info */}
                   <div className="mt-4 pt-3 border-t text-xs space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">Depletion Moment:</span>

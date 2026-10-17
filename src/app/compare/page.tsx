@@ -3,12 +3,11 @@
 import React from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { useFacilityStore } from "@/store/useFacilityStore";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { estimateRuntime } from "@/lib/engine";
 import { formatHours, formatPower } from "@/lib/utils";
-import { GitCompare } from "lucide-react";
 
 export default function ComparePage() {
   const { facilities, equipment } = useFacilityStore();
