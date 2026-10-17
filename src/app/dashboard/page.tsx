@@ -6,6 +6,7 @@ import { useFacilityStore } from "@/store/useFacilityStore";
 import { Priority, Category } from "@/types";
 import { estimateRuntime, sensitivityTable, runSimulation, calculateActiveLoad } from "@/lib/engine";
 import { formatPower, formatHours } from "@/lib/utils";
+import { PowerFlowDiagram } from "@/components/flow/PowerFlowDiagram";
 import {
   Card,
   CardHeader,
@@ -44,6 +45,7 @@ import {
   HelpCircle,
   TrendingUp,
   Info,
+  Activity,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -407,22 +409,25 @@ export default function DashboardPage() {
         </Card>
 
         {/* ============================================================== */}
-        {/* Tab Navigation: Command Overview vs Estimator & Sensitivity */}
+        {/* Tab Navigation: Command Overview vs Estimator vs Power Flow */}
         {/* ============================================================== */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-4">
-          <div className="flex items-center justify-between border-b pb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
             <TabsList className="bg-muted/60 p-1">
               <TabsTrigger value="overview" className="text-xs font-semibold gap-1.5">
                 <Layers className="h-3.5 w-3.5" />
                 <span>Equipment & Drain Timeline</span>
               </TabsTrigger>
+              <TabsTrigger value="powerflow" className="text-xs font-semibold gap-1.5">
+                <Activity className="h-3.5 w-3.5" />
+                <span>Power Flow Diagram</span>
+              </TabsTrigger>
               <TabsTrigger value="estimator" className="text-xs font-semibold gap-1.5">
                 <SlidersHorizontal className="h-3.5 w-3.5" />
-                <span>Backup Runtime Estimator & Sensitivity</span>
+                <span>Backup Estimator & Sensitivity</span>
               </TabsTrigger>
             </TabsList>
 
-            {/* Core formula teaser */}
             <div className="hidden lg:flex items-center gap-2 text-xs font-mono text-muted-foreground bg-muted/40 px-3 py-1 rounded-md border">
               <span className="font-semibold text-foreground">Runtime (h)</span> = (Capacity_kWh × DoD × Efficiency) / Load_kW
             </div>
@@ -632,7 +637,36 @@ export default function DashboardPage() {
           </TabsContent>
 
           {/* ============================================================== */}
-          {/* TAB 2: Backup Runtime Estimator Panel & Sensitivity Table */}
+          {/* TAB 2: Live Power Flow Diagram (React Flow) */}
+          {/* ============================================================== */}
+          <TabsContent value="powerflow" className="space-y-4 pt-2">
+            <Card className="p-5 bg-card/70 backdrop-blur-md">
+              <div className="flex items-center justify-between pb-3 border-b mb-4">
+                <div>
+                  <h3 className="font-bold text-base text-foreground">
+                    Facility Power Distribution Topology
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Real-time visualization of source battery, distribution panels, and categorized loads.
+                  </p>
+                </div>
+                <Badge variant="outline" className="font-mono text-xs">
+                  {formatPower(currentActiveLoadW)} Total Active Demand
+                </Badge>
+              </div>
+
+              <PowerFlowDiagram
+                equipment={facilityItems}
+                facilityName={facility?.name || "Facility"}
+                backupKwh={customCapacity}
+                backupType={facility?.backup_type || "Battery Bank"}
+                onToggleEquipment={toggleEquipmentActive}
+              />
+            </Card>
+          </TabsContent>
+
+          {/* ============================================================== */}
+          {/* TAB 3: Backup Runtime Estimator Panel & Sensitivity Table */}
           {/* ============================================================== */}
           <TabsContent value="estimator" className="space-y-6 pt-2">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
